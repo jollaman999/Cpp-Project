@@ -82,7 +82,7 @@ void SList::remove(int in){
 	    current = current->next;
             }
         }
-        cout << "¸®½ºÆ®³»¿¡ Index : " << in << " ÀÌ ¾ø½À´Ï´Ù" << endl;
+        "ë¦¬ìŠ¤íŠ¸ë‚´ì— Index : " << in << " ì´ ì—†ìŠµë‹ˆë‹¤" << endl;
 }
 
 void SList::print(){
