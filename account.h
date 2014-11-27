@@ -31,7 +31,7 @@ public:
 
 	// 계정 노드 제어 함수
 	void insert(int __index, char *__name, char *__pw);
-	void remove(char *__name);
+	int remove(char *__name);
 
 	// account.txt 파읽 읽기 쓰기 제어 함수
 	int load_acfile(void);	// 파일 불러오기

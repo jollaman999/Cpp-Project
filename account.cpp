@@ -33,7 +33,7 @@ void account ::insert(int __index, char *__name, char *__pw) {
 	new_node_account->next = NULL;
 }
 
-void account ::remove(char *__name) {
+int account ::remove(char *__name) {
 	// 삭제할 노드를 찾을 포인터 p
 	node_account *p_account = head_account->next;
 	// 삭제 후 연결될 노드를 가리킬 포인터 tolink
@@ -49,7 +49,7 @@ void account ::remove(char *__name) {
 			// 다시말해 삭제할 노드를 빼오고 그 끊어진 부분을 다시 연결 시킴
 			tolink_account->next = p_account->next;
 			delete p_account;
-			return;
+			return 0;
 		} else { // 노드를 따라 한칸씩 전진
 			p_account = p_account->next;
 			tolink_account = tolink_account->next;
@@ -58,6 +58,7 @@ void account ::remove(char *__name) {
 
 	cout << "계정 목록에 입력하신 인덱스 또는 계정명이 존재하지 않습니다!" \
 		<< endl;
+	return 1;
 }
 
 
@@ -276,12 +277,12 @@ int account ::del_account(void) {
 	cout << "삭제하고자 하는 인덱스 또는 계정명을 입력하세요 : ";
 	cin >> input_name;
 	
-	remove(input_name);
+	// 삭제할 계정이 존재하는지 검사
+	if(remove(input_name) == 0)
+		cout << endl << "삭제된 계정명 : " << input_name << endl;
 	
 	// account.txt 파일에 변경사항 기록
 	save_acfile();
-	
-	cout << endl << "삭제된 계정명 : " << input_name << endl;
 	
 	return 0;
 }
