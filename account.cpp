@@ -274,12 +274,40 @@ search: // 다시 검색한다고 했을 경우 이곳으로 되돌아옴
 
 // 계정 삭제
 int account ::del_account(void) {
+	unsigned int iscontinue;
+	char input[MAX_CHAR_INPUT];
+
+///////////////////////////////////////////////////////
+del: // 다시 삭제한다고 했을 경우 이곳으로 되돌아옴
+///////////////////////////////////////////////////////
+
 	cout << "삭제하고자 하는 인덱스 또는 계정명을 입력하세요 : ";
 	cin >> input_name;
 	
-	// 삭제할 계정이 존재하는지 검사
+	// 삭제할 계정이 존재하는지 검사한 후 결과 출력
 	if(remove(input_name) == 0)
 		cout << endl << "삭제된 계정명 : " << input_name << endl;
+	else {
+		// 다시 시도할 것인지 물어봄
+		while(1) {
+			cout << "다시 시도 하시겠습니까? (y/n) : ";
+			cin >> input;
+			if(*input == 'y' || *input == 'Y') {
+				iscontinue = 1;
+				break;
+			} else if(*input == 'n' || *input == 'N') {
+				iscontinue = 0;
+				break;
+			}
+		}
+		cout << endl;
+
+		// 다시 시도 한다고 했으면 다시 삭제하는 곳으로 감
+		if(iscontinue)
+			goto del; // 윗부분 참고
+
+		return 0;
+	}
 	
 	// account.txt 파일에 변경사항 기록
 	save_acfile();
