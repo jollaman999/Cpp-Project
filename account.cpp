@@ -73,7 +73,7 @@ int account ::load_acfile(void) {
 	if(!acfile) {
 		cout << \
 			"[에러] \"" << account_file << "\" 파일을 열 수 없습니다!!\n";
-		exit(1);
+		return 1;
 	}
 	
 	// 계정 로드
