@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <string>
+#include <string.h>
 
 // char 형 배열 사이즈 조정
 #define NAME_INPUT_MAX 30
