@@ -21,16 +21,6 @@ protected:
 	// 다음에 삽일될 위치를 지정할 인덱스 변수
 	unsigned int next_index;
 
-	// 계정 노드
-	struct node_account{
-		char name[NAME_INPUT_MAX];
-		char pw[PW_INPUT_MAX];
-		int index;	// 계정별 인덱스 변수
-		// 노드 이동 포인터 변수
-		node_account *next;
-		node_account *prev;
-	};
-
 	char *account_file; // 파일 이름 저장 변수
 	int checkend; // 파일 끝 검사
 public:
@@ -40,4 +30,16 @@ public:
 	
 	account_file = "account.txt";
 	}
+};
+
+// 계정 노드 
+class node_account {
+	friend class memo;
+public:
+	char name[NAME_INPUT_MAX];
+		char pw[PW_INPUT_MAX];
+		int index;	// 계정별 인덱스 변수
+		// 노드 이동 포인터 변수
+		node_account *next;
+		node_account *prev;
 };
