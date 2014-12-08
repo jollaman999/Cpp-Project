@@ -16,7 +16,7 @@ void sendmsg (char *id, char *sendID){
 	time(&cur_time);
 	
 	cout << "쪽지 내용을 입력 하시오 : ";
-	cin >> temptext;
+	gets(temptext);
 
 	fstream myfiles;
 	myfiles.open (ID, ios::out | ios::app);
@@ -95,20 +95,18 @@ void readmsg (char *id){
 		inputfile.close();
 	}
 	else if (searchmsg > count){
-#ifdef WINDOW
-		system ("cls");
-#endif
 #ifdef LINUX
 		system("clear");
+#else
+		system ("cls");
 #endif
 		cout << "잘못 입력 하셨습니다" << endl << endl;
 		goto retry;
 	} else if (searchmsg <= 0){
-#ifdef WINDOW
-		system ("cls");
-#endif
 #ifdef LINUX
 		system("clear");
+#else
+		system ("cls");
 #endif
 		cout << "잘못 입력 하셨습니다" << endl << endl;
 		goto retry;

@@ -33,11 +33,10 @@ int main(void) {
 		switch (*selectmenu){
 		case '1':
 			ac.add_account();
-#ifdef WINDOW
-			system ("cls");
-#endif
 #ifdef LINUX
 			system("clear");
+#else
+			system ("cls");
 #endif
 			break;
 		case '2':
@@ -46,11 +45,10 @@ int main(void) {
 			cout << "Input Password : ";
 			cin >> inputPW;
 			loginID = ac.login (inputID, inputPW);
-#ifdef WINDOW
-			system ("cls");
-#endif
 #ifdef LINUX
 			system("clear");
+#else
+			system ("cls");
 #endif
 			if (loginID == "0"){
 				cout << "아이디, 혹은 비밀번호가 일치하지 않습니다." << endl << endl;
@@ -70,20 +68,18 @@ int main(void) {
 					switch (*selectmenu2){
 					case '1':
 						ac.find_account (loginID);
-#ifdef WINDOW
-						system ("cls");
-#endif
 #ifdef LINUX
 						system("clear");
+#else
+						system ("cls");
 #endif
 						printlogo();
 					break;
 					case '2':
-#ifdef WINDOW
-						system ("cls");
-#endif
 #ifdef LINUX
 						system("clear");
+#else
+						system ("cls");
 #endif
 						if(ac.del_account(inputID) == 1)
 							cout << endl << "에러 : 계정을 삭제하는 중 오류가 발생하였습니다!!" << endl;
@@ -93,28 +89,25 @@ int main(void) {
 					break;
 					case '3':
 						endmenu = 1;
-#ifdef WINDOW
-						system ("cls");
-#endif
 #ifdef LINUX
 						system("clear");
+#else
+						system ("cls");
 #endif
 						break;
 					case '4':
-#ifdef WINDOW
-						system ("cls");
-#endif
 #ifdef LINUX
 						system("clear");
+#else
+						system ("cls");
 #endif
 						ac.read_msg (loginID);
 						break;
 					default:
-#ifdef WINDOW
-						system ("cls");
-#endif
 #ifdef LINUX
 						system("clear");
+#else
+						system ("cls");
 #endif
 						printlogo();
 						break;
@@ -126,11 +119,10 @@ int main(void) {
 			exit (1);
 			break;
 		default:
-#ifdef WINDOW
-			system ("cls");
-#endif
 #ifdef LINUX
 			system("clear");
+#else
+			system ("cls");
 #endif
 			break;
 		}
