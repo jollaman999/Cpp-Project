@@ -50,7 +50,7 @@ int main(void) {
 #else
 			system ("cls");
 #endif
-			if (loginID == "0"){
+			if (!strcmp(loginID, "0")) {
 				cout << "아이디, 혹은 비밀번호가 일치하지 않습니다." << endl << endl;
 			} else {
 				//////////////////
