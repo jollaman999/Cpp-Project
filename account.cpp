@@ -154,10 +154,16 @@ int account ::add_account(void) {
 
 	while(1) {
 		//////////////////////////////////////////
-		reinput:	// 중복 계정명 입력시 돌아옴.
+		reinput:	// 중복 계정명 또는 0 입력시 돌아옴.
 		//////////////////////////////////////////
 		cout << "계정명 입력 : ";
 		cin >> input_name;
+
+		if(!strcmp(input_name, "0")) {
+			cout << "0 은 등록할 수 없는 계정명 입니다!!" \
+				<< endl;
+			goto reinput;
+		}
 
 		do {
 	        // 파일로 부터 한줄씩 읽어옴
@@ -306,6 +312,7 @@ char* account :: login (char *__name, char *__pw) {
 	char *loginID;
 	loginID = new char;
 	strcpy (loginID, "0");
+
     while (temp != NULL) {
 		if (!strcmp (temp->name, __name)){
 			if (!strcmp (temp->pw, __pw)){
