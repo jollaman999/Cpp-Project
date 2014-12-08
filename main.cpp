@@ -82,9 +82,13 @@ int main(void) {
 						system ("cls");
 #endif
 						if(ac.del_account(inputID) == 1)
-							cout << endl << "에러 : 계정을 삭제하는 중 오류가 발생하였습니다!!" << endl;
+							cout << endl << \
+							"에러 : 계정을 삭제하는 중 오류가 발생하였습니다!!" \
+							<< endl;
 						else
-							cout << endl << inputID << " 계정을 성공적으로 삭제하였습니다." << endl;
+							cout << endl << \
+							inputID << " 계정을 성공적으로 삭제하였습니다." \
+							<< endl;
 						endmenu = 1;
 					break;
 					case '3':
