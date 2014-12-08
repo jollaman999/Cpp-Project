@@ -1,13 +1,13 @@
 #include "account.h"
+#include "send.h"
 
-void account ::insert(int __index, char *__name, char *__pw) {
+void account ::insert(char *__name, char *__pw) {
 	// 새로운 데이터를 받아올 노드 new_node
 	node_account *new_node_account = new node_account;
 	// head 에 삽입할 위치를 가리킬 포인터 p
 	node_account *p_account = NULL;
 
 	// 받아온 데이터를 new_node 에 넣음
-	new_node_account->index = __index;
 	strcpy(new_node_account->name, __name);
 	strcpy(new_node_account->pw, __pw);
 
@@ -16,7 +16,6 @@ void account ::insert(int __index, char *__name, char *__pw) {
 	if(head_account->next == NULL) {
 		head_account->next = new_node_account;
 		new_node_account->next = NULL;
-		new_node_account->prev = head_account;
 			return;
 	}
 
@@ -29,7 +28,6 @@ void account ::insert(int __index, char *__name, char *__pw) {
 
 	// head의 끝을 만나면 new_node 에 연결시킴
 	p_account->next = new_node_account;
-	new_node_account->prev = p_account;
 	new_node_account->next = NULL;
 }
 
@@ -56,7 +54,7 @@ int account ::remove(char *__name) {
 		}
 	}
 
-	cout << "계정 목록에 입력하신 인덱스 또는 계정명이 존재하지 않습니다!" \
+	cout << "계정 목록에 입력하신 계정명이 존재하지 않습니다!" \
 		<< endl;
 	return 1;
 }
@@ -82,8 +80,8 @@ int account ::load_acfile(void) {
 	
 	// 한줄 먼저 읽어 보고 바로 파일의 끝을 만날 경우
 	// 등록된 계정이 없는 것으로 인식, 해당 메세지 출력 후 함수 종료
-	checkend = fscanf(is_ac_empty, "INDEX : %3d ID : %s PW : %s\n", \
-			&next_index, name, pw);
+	checkend = fscanf(is_ac_empty, "ID : %s PW : %s\n", \
+			name, pw);
 	if(checkend == EOF) {
 		cout << "현재 등록되어 있는 계정이 없습니다." << endl;
 		return 0;
@@ -91,8 +89,8 @@ int account ::load_acfile(void) {
 
 	do {
 	         // 파일로 부터 한줄씩 읽어옴
-	         checkend = fscanf(acfile, "INDEX : %3d ID : %s PW : %s\n", \
-				 &next_index, name, pw);
+	         checkend = fscanf(acfile, "ID : %s PW : %s\n", \
+				name, pw);
 	
 		 // 파일 끝을 만나면 루프 종료
 		 if(checkend == EOF)
@@ -101,7 +99,7 @@ int account ::load_acfile(void) {
 		 count++; // 등록된 계정 수 세기
 
 		 // 연결 리스트에 하나씩 삽입
-		 insert(next_index, name, pw);
+		 insert(name, pw);
 	} while(1);
 
 	cout << "현재 " << count << "명의 계정이 " \
@@ -134,12 +132,7 @@ int account ::save_acfile(void) {
 	// 포인터 p가 head의 끝을 만날때까지 한칸씩 전진하며
 	// account.txt 파일에 연결된 노드 순서대로 기록
 	while(p_account != NULL) {
-		acfile << "INDEX : ";
-		if(next_index == 0)
-			p_account->index = 1;
-		// index 가 1일 경우 001, 23일 경우 023 이런식으로 기록됨
-		acfile << setfill('0') << setw(3) << p_account->index;
-		acfile << " ID : " << p_account->name;
+		acfile << "ID : " << p_account->name;
 		acfile << " PW : " << p_account->pw << endl;
 
 		p_account = p_account->next;
@@ -156,20 +149,45 @@ int account ::add_account(void) {
 	unsigned int iscontinue;
 	char input[MAX_CHAR_INPUT];
 
-	while(1) {
-		next_index++; // 다음에 삽일될 인덱스 위치 증가 시킴
+	FILE *acfile = NULL;
+	acfile = fopen(account_file, "rt");
 
+	while(1) {
+		//////////////////////////////////////////
+		reinput:	// 중복 계정명 입력시 돌아옴.
+		//////////////////////////////////////////
 		cout << "계정명 입력 : ";
 		cin >> input_name;
+
+		do {
+	        // 파일로 부터 한줄씩 읽어옴
+	        checkend = fscanf(acfile, "ID : %s PW : %s\n", \
+				name, pw);
+
+			// 등록되어 있는 계정 없거나 파일 끝가면 루프 빠져나옴
+			if(checkend == EOF)
+				break;
+	
+	        // 사용자가 입력한 계정명이 계정 파일 안에 있는지 검사
+	        if(strcmp(input_name, name) == 0) {
+				cout << "이미 존재하는 계정명 입니다" << endl;
+				goto reinput;
+			}
+		}while (1);
+
 		cout << "암호 입력 : ";
 		cin >> input_pw;
-		insert(next_index, input_name, input_pw);
+		insert(input_name, input_pw);
+
+		// account.txt 파일에 변경사항 기록
+		save_acfile();
 
 		// 추가로 계속 등록할 것인지 물어봄
 		while(1) {
 			cout << "다른 계정을 계속 등록 하시겠습니까? (y/n) : ";
 			cin >> input;
 			if(*input == 'y' || *input == 'Y') {
+				fseek(acfile, 0, SEEK_SET);
 				iscontinue = 1;
 				break;
 			} else if(*input == 'n' || *input == 'N') {
@@ -185,15 +203,12 @@ int account ::add_account(void) {
 		else
 			break;
 	}
-
-	// account.txt 파일에 변경사항 기록
-	save_acfile();
 	
 	return 0;
 }
 
 // 계정 찾기
-int account ::find_account(void) {
+int account ::find_account(char *sendID) {
 	unsigned int iscontinue;
 	char input[MAX_CHAR_INPUT];
 
@@ -201,7 +216,7 @@ int account ::find_account(void) {
 search: // 다시 검색한다고 했을 경우 이곳으로 되돌아옴
 ///////////////////////////////////////////////////////
 
-	cout << "찾고자 하는 계정명을 입력하세요 : ";
+	cout << "쪽지를 보낼 대상을 입력하세요 : ";
 	cin >> input_name;
 	
 	// rt 모드로 파일 열기 : r-읽기모드, t-텍스트 모드
@@ -219,8 +234,8 @@ search: // 다시 검색한다고 했을 경우 이곳으로 되돌아옴
 	cout << endl << "계정 조회중...";
 	do {
 	        // 파일로 부터 한줄씩 읽어옴
-	        checkend = fscanf(acfile, "INDEX : %3d ID : %s PW : %s\n", \
-				&index, name, pw);
+	        checkend = fscanf(acfile, "ID : %s PW : %s\n", \
+				name, pw);
 	
 	        // 사용자가 입력한 계정명이 계정 파일 안에 있는지 검사
 	        if(strcmp(input_name, name) == 0) {
@@ -231,11 +246,13 @@ search: // 다시 검색한다고 했을 경우 이곳으로 되돌아옴
 				while(1) {
 					cout << name << "님께 메세지를 보내시겠습니까? (y/n) : ";
 					cin >> input;
+					getchar();
 					if(*input == 'y' || *input == 'Y') {
-						cout << endl;
+						sendmsg (name, sendID);
+						/* cout << endl;
 						cout << ">>>>메세지 함수 만들면 이곳에서 불러올꺼임...<<<<";
-						cout << endl << endl;
-						// message.send();
+						cout << endl << endl; */
+						//message.send();
 						break;
 					} else if(*input == 'n' || *input == 'N') {
 						break;
@@ -253,7 +270,7 @@ search: // 다시 검색한다고 했을 경우 이곳으로 되돌아옴
 
 	// 추가로 계속 검색할 것인지 물어봄
 	while(1) {
-		cout << "다시 검색 하시겠습니까? (y/n) : ";
+		cout << "추가로 쪽지를 보내겠습니까? (y/n) : ";
 		cin >> input;
 		if(*input == 'y' || *input == 'Y') {
 			iscontinue = 1;
@@ -273,44 +290,36 @@ search: // 다시 검색한다고 했을 경우 이곳으로 되돌아옴
 }
 
 // 계정 삭제
-int account ::del_account(void) {
-	unsigned int iscontinue;
-	char input[MAX_CHAR_INPUT];
-
-///////////////////////////////////////////////////////
-del: // 다시 삭제한다고 했을 경우 이곳으로 되돌아옴
-///////////////////////////////////////////////////////
-
-	cout << "삭제하고자 하는 인덱스 또는 계정명을 입력하세요 : ";
-	cin >> input_name;
-	
+int account ::del_account(char *input_name) {
 	// 삭제할 계정이 존재하는지 검사한 후 결과 출력
-	if(remove(input_name) == 0)
-		cout << endl << "삭제된 계정명 : " << input_name << endl;
-	else {
-		// 다시 시도할 것인지 물어봄
-		while(1) {
-			cout << "다시 시도 하시겠습니까? (y/n) : ";
-			cin >> input;
-			if(*input == 'y' || *input == 'Y') {
-				iscontinue = 1;
-				break;
-			} else if(*input == 'n' || *input == 'N') {
-				iscontinue = 0;
-				break;
-			}
-		}
-		cout << endl;
-
-		// 다시 시도 한다고 했으면 다시 삭제하는 곳으로 감
-		if(iscontinue)
-			goto del; // 윗부분 참고
+	if(remove(input_name) == 0) {
+		// account.txt 파일에 변경사항 기록
+		save_acfile();
 
 		return 0;
-	}
-	
-	// account.txt 파일에 변경사항 기록
-	save_acfile();
-	
+	} else
+		return 1;
+}
+
+char* account :: login (char *__name, char *__pw) {
+	node_account *temp = head_account->next;
+	char *loginID;
+	loginID = new char;
+	strcpy (loginID, "0");
+    while (temp != NULL) {
+		if (!strcmp (temp->name, __name)){
+			if (!strcmp (temp->pw, __pw)){
+				strcpy (loginID,temp->name);
+			}
+		} 
+		temp = temp->next;
+    }
+	return loginID;
+}
+
+int account ::read_msg (char *readID) {
+	readmsg (readID);
+
 	return 0;
 }
+

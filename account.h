@@ -16,7 +16,6 @@ public:
 
 		head_account = new node_account;
 		head_account->next = NULL;
-		head_account->prev = NULL;
 	}
 	// 계정 소멸자 - 계정 연결 리스트 연결된 노드 순으로 메모리 반환
 	~account(void) {
@@ -30,7 +29,7 @@ public:
 	}
 
 	// 계정 노드 제어 함수
-	void insert(int __index, char *__name, char *__pw);
+	void insert(char *__name, char *__pw);
 	int remove(char *__name);
 
 	// account.txt 파읽 읽기 쓰기 제어 함수
@@ -38,7 +37,11 @@ public:
 	int save_acfile(void);	// 파일에 쓰기
 
 	// 기능 제어 함수
-	int add_account(void);   // 계정 추가
-	int find_account(void);  // 계정 찾기
-	int del_account(void);   // 계정 삭제
+	int add_account(void);			// 계정 추가
+	int find_account(char *sendID);  	// 계정 찾기
+	int del_account(char *input_name);	// 계정 삭제
+	
+	char* login (char *__name, char *__pw);
+	int read_msg (char *readID);
 };
+
