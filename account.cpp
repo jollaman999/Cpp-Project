@@ -324,14 +324,28 @@ search: // 다시 검색한다고 했을 경우 이곳으로 되돌아옴
 
 // 계정 삭제
 int account ::del_account(char *input_name) {
-	// 삭제할 계정이 존재하는지 검사한 후 결과 출력
-	if(remove(input_name) == 0) {
-		// account.txt 파일에 변경사항 기록
-		save_acfile();
+   // 삭제할 계정이 존재하는지 검사한 후 결과 출력
+   if(remove(input_name) == 0) {
+      // account.txt 파일에 변경사항 기록
+      save_acfile();
 
-		return 0;
-	} else
-		return 1;
+      char ID[128];
+      char *txt;
+      txt = ".txt";
+      strcpy(ID, input_name);
+      strcat(ID, txt);
+
+      ifstream inputfile (ID, ios::out | ios::trunc);
+
+      if (!inputfile)
+         cout << "파일 열기에 실패.\n";
+
+      inputfile.close();
+
+
+      return 0;
+   } else
+      return 1;
 }
 
 char* account :: login (char *__name, char *__pw) {
