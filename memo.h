@@ -1,7 +1,6 @@
 #include <iostream>
 
-// 컴파일 하는 운영체제 정의
-// #define WINDOW
+// 리눅스 지원
 #define LINUX
 
 using namespace std;
