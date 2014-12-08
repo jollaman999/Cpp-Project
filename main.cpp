@@ -40,9 +40,9 @@ int main(void) {
 #endif
 			break;
 		case '2':
-			cout << "Input ID : ";
+			cout << "계정명 : ";
 			cin >> inputID;
-			cout << "Input Password : ";
+			cout << "암호 : ";
 			cin >> inputPW;
 			loginID = ac.login (inputID, inputPW);
 #ifdef LINUX
@@ -57,12 +57,13 @@ int main(void) {
 				/// 두번째 매뉴///
 				//////////////////
 				printlogo();
+				endmenu = 0;
 				cout << loginID << " 로 로그인 하셨습니다." << endl << endl;
 				do {
 					cout << "1. 쪽지 보내기" << endl;
-					cout << "2. 계정 삭제" << endl;
-					cout << "3. 로그 아웃" << endl << endl;;
-					cout << "4. 쪽지 읽기" << endl;
+					cout << "2. 쪽지 읽기" << endl;
+					cout << "3. 계정 삭제" << endl << endl;;
+					cout << "4. 로그 아웃" << endl;
 
 					cin >> selectmenu2;
 					switch (*selectmenu2){
@@ -75,7 +76,7 @@ int main(void) {
 #endif
 						printlogo();
 					break;
-					case '2':
+					case '3':
 #ifdef LINUX
 						system("clear");
 #else
@@ -91,22 +92,22 @@ int main(void) {
 							<< endl;
 						endmenu = 1;
 					break;
-					case '3':
+					case '4':
 						endmenu = 1;
 #ifdef LINUX
 						system("clear");
 #else
 						system ("cls");
 #endif
-						break;
-					case '4':
+					break;
+					case '2':
 #ifdef LINUX
 						system("clear");
 #else
 						system ("cls");
 #endif
 						ac.read_msg (loginID);
-						break;
+					break;
 					default:
 #ifdef LINUX
 						system("clear");
@@ -114,7 +115,7 @@ int main(void) {
 						system ("cls");
 #endif
 						printlogo();
-						break;
+					break;
 					}
 				} while (endmenu == 0);
 			}
@@ -138,9 +139,8 @@ int main(void) {
 
 void printlogo () {
 	cout << endl << endl << endl;
-	cout << "┌─────────────────────────────────┐" << endl;;
-	cout << "│        쪽지 전송 프로그램       │" << endl;;
-	cout << "└─────────────────────────────────┘" << endl;;
+	cout << "┌────────────────┐" << endl;;
+	cout << "│	 쪽지 전송 프로그램	  │" << endl;;
+	cout << "└────────────────┘" << endl;;
 	cout << endl << endl << endl;
 }
-
