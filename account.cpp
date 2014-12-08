@@ -62,6 +62,10 @@ int account ::remove(char *__name) {
 
 // account.txt 파일 불러오기
 int account ::load_acfile(void) {
+	// 비밀번호 복호화 포인터
+	char *pw_unsecret = NULL, *p = NULL;
+	pw_unsecret = new char;
+
 	// rt 모드로 파일 열기 : r-읽기모드, t-텍스트 모드
 	FILE *acfile = NULL;
 	FILE *is_ac_empty = NULL;
@@ -98,8 +102,17 @@ int account ::load_acfile(void) {
 
 		 count++; // 등록된 계정 수 세기
 
+		// 비밀번호 복호화
+		strcpy(pw_unsecret, pw);
+		p = pw_unsecret;
+		while(*p != '\0') {
+			*p = *p - '@';
+			p++;
+		}
+		// cout << pw_unsecret << endl;
+
 		 // 연결 리스트에 하나씩 삽입
-		 insert(name, pw);
+		 insert(name, pw_unsecret);
 	} while(1);
 
 	cout << "현재 " << count << "명의 계정이 " \
@@ -110,6 +123,10 @@ int account ::load_acfile(void) {
 
 // account.txt 파일에 쓰기
 int account ::save_acfile(void) {
+	// 비밀번호 암호화 포인터
+	char *pw_secret = NULL, *p = NULL;
+	pw_secret = new char;
+
 	// 현재 노드 위치를 지정할 포인터 p
 	node_account *p_account = head_account->next;
 	
@@ -132,8 +149,17 @@ int account ::save_acfile(void) {
 	// 포인터 p가 head의 끝을 만날때까지 한칸씩 전진하며
 	// account.txt 파일에 연결된 노드 순서대로 기록
 	while(p_account != NULL) {
+		// 비밀번호 암호화
+		strcpy(pw_secret, p_account->pw);
+		p = pw_secret;
+		while(*p != '\0') {
+			*p = *p + '@';
+			p++;
+		}
+		// cout << pw_secret << endl;
+
 		acfile << "ID : " << p_account->name;
-		acfile << " PW : " << p_account->pw << endl;
+		acfile << " PW : " << pw_secret << endl;
 
 		p_account = p_account->next;
 	}
@@ -183,6 +209,7 @@ int account ::add_account(void) {
 
 		cout << "암호 입력 : ";
 		cin >> input_pw;
+
 		insert(input_name, input_pw);
 
 		// account.txt 파일에 변경사항 기록
