@@ -207,8 +207,19 @@ int account ::add_account(void) {
 			}
 		}while (1);
 
+pw_reinput:
 		cout << "암호 입력 : ";
 		cin >> input_pw;
+
+		char *check_hangul = input_pw;
+
+		while(*check_hangul != '\0') {
+			if( !((*check_hangul >= 'A' && *check_hangul <= 'Z') || (*check_hangul >= 'a' && *check_hangul <= 'z') || (*check_hangul >= '0' && *check_hangul <= '9')) ) {
+				cout << "암호는 영문자와 숫자 조합으로만 등록하실 수 있습니다." << endl;
+				goto pw_reinput;
+			}
+			check_hangul++;
+		}
 
 		insert(input_name, input_pw);
 
