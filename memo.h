@@ -7,7 +7,7 @@ using namespace std;
 
 // char 형 배열 사이즈 조정
 #define NAME_INPUT_MAX 60
-#define PW_INPUT_MAX 80
+#define PW_INPUT_MAX 255
 #define MAX_CHAR_INPUT 255
 
 // 쪽지 클래스 - 기초 클래스
